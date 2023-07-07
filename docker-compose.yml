@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: db
+    restart: always
+    tty: true
+    # volumes:
+    #   - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - fullcycle
+  
+  hello-express:
+    build:
+      context: node
+    container_name: hello-express
+    tty: true
+    volumes:
+      - ./node:/usr/src/app
+    entrypoint: wait-for db:3306 -t 60 -- "node" "index.js"
+    networks:
+      - fullcycle
+  
+  nginx:
+    build:
+      context: nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    entrypoint: wait-for hello-express:3000 -t 60 -- ./docker-entrypoint.sh nginx -g "daemon off;"
+    networks:
+      - fullcycle
+
+networks:
+  fullcycle:
+    driver: bridge
