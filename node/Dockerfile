@@ -7,7 +7,11 @@ RUN apt update && \
 
 WORKDIR /usr/src/app
 
-COPY . .
+COPY ./index.js .
+COPY ./package.json .
+
+RUN npm install express --save && \
+    npm install mysql --save
 
 EXPOSE 3000
 
