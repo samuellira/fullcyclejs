@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x /usr/src/app
 
 EXPOSE 3000
 
