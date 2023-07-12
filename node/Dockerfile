@@ -9,6 +9,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+RUN chmod +x entrypoint.sh
+
 EXPOSE 3000
 
 CMD ["node", "index.js"]
